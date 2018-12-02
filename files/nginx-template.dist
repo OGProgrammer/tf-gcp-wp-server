@@ -1,0 +1,41 @@
+server {
+    ## Your website name goes here.
+    server_name template.com www.template.com;
+
+    ## Your only path reference.
+    root /var/www/template;
+
+    listen  80;
+    #~SSL~ listen 443 ssl; ssl_certificate /etc/letsencrypt/live/template.com/fullchain.pem; ssl_certificate_key /etc/letsencrypt/live/template.com/privkey.pem; include snippets/ssl_lockdown.conf;
+
+    index index.html index.htm index.php;
+
+    ## Don't log files that get hit alot in access logs and don't serve up dot files (hidden)
+    include snippets/drop.conf;
+
+    location / {
+        try_files $uri $uri/ /index.php?q=$uri&$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_buffers 8 256k;
+        fastcgi_buffer_size 128k;
+        fastcgi_intercept_errors on;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass 127.0.0.1:9001;
+    }
+
+    location ~* \.(css|js|png|jpg|jpeg|gif|ico)$ {
+        expires 1d;
+    }
+
+    resolver 1.1.1.1 1.0.0.1 [2606:4700:4700::1111] [2606:4700:4700::1001];
+}
+
+# Loop 80 back to 443
+#server {
+#    listen 80;
+#    server_name template.com www.template.com;
+#    return 301 https://$host$request_uri;
+#}
