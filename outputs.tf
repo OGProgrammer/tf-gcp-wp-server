@@ -7,7 +7,7 @@ output "server_ip" {
 }
 
 output "server_internal_ip" {
-  value = "${google_compute_instance.main.network_interface.0.access_config.0.nat_ip}"
+  value = "${google_compute_instance.main.network_interface.0.address}"
 }
 
 output "server_location" {
