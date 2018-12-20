@@ -3,6 +3,11 @@ resource "google_compute_address" "main" {
   name = "tf-${var.vendor}-wp-${var.server-tag}"
 }
 
+data "google_compute_image" "debian" {
+  family = "debian-9"
+  project = "debian-cloud"
+}
+
 # Single Instance + Debian 9 Bash Provision script
 resource "google_compute_instance" "main" {
   name = "tf-${var.vendor}-wp-${var.server-tag}"
@@ -13,7 +18,7 @@ resource "google_compute_instance" "main" {
   boot_disk {
     auto_delete = "false"
     initialize_params {
-      image = "debian-cloud/debian-9"
+      image = "${data.google_compute_image.debian.self_link}"
       size = "30"
     }
   }
