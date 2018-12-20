@@ -3,6 +3,7 @@ resource "google_compute_address" "main" {
   name = "tf-${var.vendor}-wp-${var.server-tag}"
 }
 
+# Use this to find the latest
 data "google_compute_image" "debian" {
   family = "debian-9"
   project = "debian-cloud"
@@ -60,6 +61,9 @@ resource "google_compute_instance" "main" {
   metadata_startup_script = "${file("wp-server-deb9.sh")}"
   # If changes are made to the server bash provision script, lets not recreate the server over that.
   lifecycle {
-    ignore_changes = ["metadata_startup_script"]
+    ignore_changes = [
+      "metadata_startup_script",
+      "boot_disk.0.initialize_params"
+    ]
   }
 }
