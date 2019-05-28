@@ -63,7 +63,7 @@ resource "google_compute_instance" "main" {
   lifecycle {
     ignore_changes = [
       "metadata_startup_script",
-      "boot_disk.0.initialize_params"
+      "boot_disk.initialize_params"
     ]
   }
 }
